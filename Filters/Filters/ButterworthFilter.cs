@@ -28,5 +28,15 @@ namespace DSPPlus.Filters
         {
             return new ButterworthFilter(IIRFilter.DoLowPass(cutoffFreq, sampleRate, order));
         }
+
+        public static ButterworthFilter CreateBandPass(double cutoffFreqLow, double cutoffFreqHigh, double sampleRate, int order)
+        {
+            return new ButterworthFilter(IIRFilter.DoBandPass(cutoffFreqLow, cutoffFreqHigh, sampleRate, order));
+        }
+
+        public static ButterworthFilter CreateBandStop(double cutoffFreqLow, double cutoffFreqHigh, double sampleRate, int order)
+        {
+            return new ButterworthFilter(IIRFilter.DoBandStop(cutoffFreqLow, cutoffFreqHigh, sampleRate, order));
+        }
     }
 }

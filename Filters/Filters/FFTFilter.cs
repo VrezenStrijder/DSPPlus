@@ -16,28 +16,30 @@ namespace DSPPlus.Filters
         public FFTFilter(FilterParameter param)
         {
             this.parameter = param;
+            var freqBand = param.FrequencyBands.FirstOrDefault();
 
-            switch (param.FrequencyType)
+
+            switch (freqBand.FrequencyType)
             {
                 case FrequencyFilterType.LowPass:
-                    frequencyMask = freq => freq > parameter.Cutoff1;
+                    frequencyMask = freq => freq > freqBand.Cutoff1;
                     break;
 
                 case FrequencyFilterType.HighPass:
-                    frequencyMask = freq => freq < parameter.Cutoff1;
+                    frequencyMask = freq => freq < freqBand.Cutoff1;
                     break;
 
                 case FrequencyFilterType.BandPass:
-                    if (param.Cutoff2.HasValue)
+                    if (freqBand.Cutoff2.HasValue)
                     {
-                        frequencyMask = freq => freq < param.Cutoff1 || freq > parameter.Cutoff2.Value;
+                        frequencyMask = freq => freq < freqBand.Cutoff1 || freq > freqBand.Cutoff2.Value;
                     }
                     break;
 
                 case FrequencyFilterType.BandStop:
-                    if (parameter.Cutoff2.HasValue)
+                    if (freqBand.Cutoff2.HasValue)
                     {
-                        frequencyMask = freq => freq >= param.Cutoff1 && freq <= parameter.Cutoff2.Value;
+                        frequencyMask = freq => freq >= freqBand.Cutoff1 && freq <= freqBand.Cutoff2.Value;
                     }
                     break;
             }

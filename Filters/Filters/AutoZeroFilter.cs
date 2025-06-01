@@ -9,9 +9,11 @@ namespace DSPPlus.Filters
     public class AutoZeroFilter : IFilter
     {
         private int windowSize;
+        private AutoZeroAlgorithm algorithm;
 
-        public AutoZeroFilter(int window)
+        public AutoZeroFilter(AutoZeroAlgorithm algorithm, int window)
         {
+            this.algorithm = algorithm;
             windowSize = window;
         }
 
@@ -22,7 +24,11 @@ namespace DSPPlus.Filters
 
         public double[] ProcessBatch(double[] inputSignal)
         {
-            return FilterUtility.AutoZero(inputSignal, windowSize);
+            if (algorithm == AutoZeroAlgorithm.LinearDetrend)
+            {
+                return AutoZeroUtility.LinearDetrend(inputSignal);
+            }
+            return AutoZeroUtility.MovingAverage(inputSignal, windowSize);
         }
     }
 }

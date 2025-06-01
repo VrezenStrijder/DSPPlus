@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MathNet.Filtering.IIR;
 
 namespace DSPPlus.Filters
 {
@@ -12,11 +13,16 @@ namespace DSPPlus.Filters
     /// </summary>
     public class IIRFilter : IFilter
     {
-        private double[] a; // 分母系数
-        private double[] b; // 分子系数
-        private double[] x; // 输入缓冲
-        private double[] y; // 输出缓冲
+        private readonly double[] a; // 分母系数（反馈）
+        private readonly double[] b; // 分子系数（前馈）
+        private readonly double[] x; // 输入历史
+        private readonly double[] y; // 输出历史
 
+        private readonly OnlineIirFilter internalFilter;
+
+        /// <summary>
+        /// 使用 a[], b[] 系数构造
+        /// </summary>
         public IIRFilter(double[] numerator, double[] denominator)
         {
             b = numerator;
@@ -25,8 +31,22 @@ namespace DSPPlus.Filters
             y = new double[a.Length];
         }
 
+        /// <summary>
+        /// 使用 MathNet 的 OnlineIirFilter 构造
+        /// </summary>
+        public IIRFilter(OnlineIirFilter filter)
+        {
+            internalFilter = filter ?? throw new ArgumentNullException(nameof(filter));
+        }
+
+
         public double Process(double input)
         {
+            //if (internalFilter != null)
+            //{
+            //    return internalFilter.ProcessSample(input);
+            //}
+
             // 移动输入缓冲区
             for (int i = x.Length - 1; i > 0; i--)
             {
@@ -58,6 +78,11 @@ namespace DSPPlus.Filters
 
         public double[] ProcessBatch(double[] inputSignal)
         {
+            //if (internalFilter != null)
+            //{
+            //    return internalFilter.ProcessSamples(inputSignal);
+            //}
+
             double[] output = new double[inputSignal.Length];
 
             // 重置滤波器状态

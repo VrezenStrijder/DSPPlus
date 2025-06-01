@@ -44,6 +44,14 @@ namespace DSPPlus.Filters
             P = initialErrorCovariance;
         }
 
+        public KalmanFilter(FilterParameter param)
+        {
+            Q = param.ProcessNoise ?? 0.01;
+            R = param.MeasurementNoise ?? 0.1;
+            x = param.InitialEstimate ?? 0;
+            P = param.InitialErrorCovariance ?? 1;
+        }
+
         public double Process(double measurement)
         {
             P += Q;

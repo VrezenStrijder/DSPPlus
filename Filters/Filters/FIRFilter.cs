@@ -23,6 +23,8 @@ namespace DSPPlus.Filters
             bufferIndex = 0;
         }
 
+        public double[] GetCoefficients() => coefficients;
+
         public double Process(double input)
         {
             // 将新样本添加到缓冲区
